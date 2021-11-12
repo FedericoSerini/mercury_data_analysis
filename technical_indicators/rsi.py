@@ -14,7 +14,7 @@ class Rsi:
         self.data = []
 
     def calculate_rsi_by_sma(self):
-        close = self.data['close']
+        close = self.data.close
         delta = close.diff()
         up, down = delta.clip(lower=0), delta.clip(upper=0)
         up = self.sma.calculate_sma(up)

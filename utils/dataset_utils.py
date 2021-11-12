@@ -35,9 +35,6 @@ class Dataset:
         trades = store[['symbol', 'price', 'event_time', 'quantity']]
         return trades
 
-    def get_vwap(self, agg_trades):
-        return agg_trades.apply(lambda x: np.average(x.price, weights=x.shares)).to_frame('vwap')
-
     def get_vol(self, agg_trades):
         return agg_trades.shares.sum().to_frame('vol')
 
@@ -46,3 +43,8 @@ class Dataset:
 
     def get_ohlc(self, agg_trades):
         return agg_trades.price.ohlc()
+
+    def get_ohlcv(self, agg_trades):
+        ohlcv = agg_trades.price.ohlc()
+        ohlcv['volume'] = self.get_vol(agg_trades)
+        return ohlcv
