@@ -1,4 +1,4 @@
-from technical_indicators.atr import Atr
+from technical_indicators.dmi import Dmi
 
 """ Average Directional Movement"""
 
@@ -9,31 +9,17 @@ class Adx:
         self.look_back = look_back
         self.should_plot = should_plot
         self.data = original_data.copy()
-        self.calculated_atr = Atr(look_back, self.data).calculate_atr()
+        self.dmi = Dmi(look_back, self.data).get_dmi()
 
     def __del__(self):
         self.data = []
 
-    def get_positive_directional_index(self):
-        positive_directional_movement = self.data.high.diff()
-        positive_directional_movement[positive_directional_movement < 0] = 0
-        positive_directional_index = 100 * (
-                positive_directional_movement.ewm(alpha=1 / self.look_back).mean() / self.calculated_atr)  # todo refactor
-        return positive_directional_index
-
-    def get_negative_directional_index(self):
-        negative_directional_movement = self.data.low.diff()
-        negative_directional_movement[negative_directional_movement > 0] = 0
-        negative_directional_index = abs(
-            100 * (negative_directional_movement.ewm(alpha=1 / self.look_back).mean() / self.calculated_atr))  # todo refactor
-        return negative_directional_index
-
     def calculate_adx(self):
-        pdi = self.get_positive_directional_index()
-        ndi = self.get_negative_directional_index()
+        pdi = self.dmi[0]
+        ndi = self.dmi[1]
         dx = (abs(pdi - ndi) / abs(pdi + ndi)) * 100
         adx = ((dx.shift(1) * (self.look_back - 1)) + dx) / self.look_back
-        adx_smooth = adx.ewm(alpha=1 / self.look_back).mean() # todo refactor
+        adx_smooth = adx.ewm(alpha=1 / self.look_back).mean()
         self.plot_adx(pdi, ndi, adx_smooth)
         return adx_smooth
 

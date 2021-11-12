@@ -9,6 +9,10 @@ from technical_indicators.trima import Trima
 from technical_indicators.vwap import Vwap
 from technical_indicators.obv import Obv
 from technical_indicators.ema import Ema
+from technical_indicators.ad import Ad
+from technical_indicators.stoch import Stoch
+from technical_indicators.dema import Dema
+from technical_indicators.tema import Tema
 
 look_back = 14
 dataset = dataset_utils.Dataset(dataset_filename='data/2021-9-21.csv')
@@ -39,6 +43,18 @@ obv.calculate_obv()
 
 ema = Ema(look_back=look_back, original_data=olhc_data, should_plot=True)
 ema.calculate_ema()
+
+dema = Dema(look_back=look_back, original_data=olhc_data, should_plot=True)
+dema.calculate_dema()
+
+tema = Tema(look_back=look_back, original_data=olhc_data, should_plot=True)
+tema.calculate_tema()
+
+ad = Ad(original_data=olhcv_data, should_plot=True)
+ad.calculate_ad()
+
+stoch = Stoch(look_back=look_back, original_data=olhc_data, should_plot=True)
+stoch.calculate_stoch()
 
 end = datetime.datetime.now()
 print(end-start)
