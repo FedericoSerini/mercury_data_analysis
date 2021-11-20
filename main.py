@@ -13,6 +13,7 @@ from technical_indicators.ad import Ad
 from technical_indicators.stoch import Stoch
 from technical_indicators.dema import Dema
 from technical_indicators.tema import Tema
+from utils.machine_learning_dataset_creator import MachineLearningDataset
 
 look_back = 14
 dataset = dataset_utils.Dataset(dataset_filename='data/2021-9-21.csv')
@@ -56,5 +57,9 @@ ad.calculate_ad()
 stoch = Stoch(look_back=look_back, original_data=olhc_data, should_plot=True)
 stoch.calculate_stoch()
 
+mlds = MachineLearningDataset(olhc_data, look_back)
+mlds.prepare_data_for_ml()
+
+
 end = datetime.datetime.now()
-print(end-start)
+print('\n'+(end-start).__str__())

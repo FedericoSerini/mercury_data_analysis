@@ -9,18 +9,17 @@ class Adx:
         self.look_back = look_back
         self.should_plot = should_plot
         self.data = original_data.copy()
-        self.dmi = Dmi(look_back, self.data).get_dmi()
+        self.dmi = Dmi(look_back, self.data)
+        self.dx = self.dmi.calculate_dmi()
 
     def __del__(self):
         self.data = []
 
     def calculate_adx(self):
-        pdi = self.dmi[0]
-        ndi = self.dmi[1]
-        dx = (abs(pdi - ndi) / abs(pdi + ndi)) * 100
+        dx = self.dx
         adx = ((dx.shift(1) * (self.look_back - 1)) + dx) / self.look_back
         adx_smooth = adx.ewm(alpha=1 / self.look_back).mean()
-        self.plot_adx(pdi, ndi, adx_smooth)
+        self.plot_adx(self.dmi.get_positive_directional_index(), self.dmi.get_negative_directional_index(), adx_smooth)
         return adx_smooth
 
     def plot_adx(self, pdi, ndi, adx_smooth):

@@ -1,4 +1,6 @@
 # Accumulation/Distribution
+import numpy as np
+
 
 class Ad:
 
