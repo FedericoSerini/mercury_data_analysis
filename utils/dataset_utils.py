@@ -35,6 +35,12 @@ class Dataset:
         trades = store[['symbol', 'price', 'event_time', 'quantity']]
         return trades
 
+    def get_full_trades(self, symbol):
+        trades = pd.read_csv(self.filename, delimiter=';')
+        trades = trades.loc[trades['symbol'] == symbol]
+        trades = trades.set_index('date')
+        return trades
+
     def get_vol(self, agg_trades):
         return agg_trades.shares.sum().to_frame('vol')
 

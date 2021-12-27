@@ -1,65 +1,24 @@
 import datetime
 
+
 from utils import dataset_utils
 import pandas as pd
-from technical_indicators.adx import Adx
-from technical_indicators.rsi import Rsi
-from technical_indicators.bbands import BBands
-from technical_indicators.trima import Trima
-from technical_indicators.vwap import Vwap
-from technical_indicators.obv import Obv
-from technical_indicators.ema import Ema
-from technical_indicators.ad import Ad
-from technical_indicators.stoch import Stoch
-from technical_indicators.dema import Dema
-from technical_indicators.tema import Tema
+from utils.technical_indicators_calculator import TechnicalIndicatorsCalculator
 from utils.machine_learning_dataset_creator import MachineLearningDataset
 
-look_back = 14
-dataset = dataset_utils.Dataset(dataset_filename='data/2021-9-21.csv')
-trades = dataset.get_trades_with_timestamp_index("BTCEUR")
-resampled = trades.groupby(pd.Grouper(freq='1Min'))
-olhc_data = dataset.get_ohlc(resampled)
-olhcv_data = dataset.get_ohlcv(resampled)
+
+look_back = 11
+dataset = dataset_utils.Dataset(dataset_filename='data/BTCUSDT_d.csv')
+trades = dataset.get_full_trades("BTCUSDT")
 
 start = datetime.datetime.now()
 
-adx = Adx(look_back=look_back, original_data=olhc_data, should_plot=True)
-adx.calculate_adx()
+mlds = MachineLearningDataset(trades, look_back)
+buy_sell_label = mlds.prepare_data_for_ml()
 
-rsi = Rsi(look_back=look_back, original_data=olhc_data, should_plot=True)
-rsi.calculate_rsi_by_sma()
-
-bbands = BBands(look_back=look_back, original_data=trades, olhc_data=olhc_data, should_plot=True)
-bbands.calculate_bbands()
-
-trima = Trima(look_back=look_back, original_data=olhc_data, should_plot=True)
-trima.calculate_trima()
-
-vwap = Vwap(original_data=trades, should_plot=True)
-vwap.calculate_vwap()
-
-obv = Obv(original_data=olhcv_data, should_plot=True)
-obv.calculate_obv()
-
-ema = Ema(look_back=look_back, original_data=olhc_data, should_plot=True)
-ema.calculate_ema()
-
-dema = Dema(look_back=look_back, original_data=olhc_data, should_plot=True)
-dema.calculate_dema()
-
-tema = Tema(look_back=look_back, original_data=olhc_data, should_plot=True)
-tema.calculate_tema()
-
-ad = Ad(original_data=olhcv_data, should_plot=True)
-ad.calculate_ad()
-
-stoch = Stoch(look_back=look_back, original_data=olhc_data, should_plot=True)
-stoch.calculate_stoch()
-
-mlds = MachineLearningDataset(olhc_data, look_back)
-mlds.prepare_data_for_ml()
-
+tic = TechnicalIndicatorsCalculator()
+a = tic.calculate()
+res = buy_sell_label.join(a)
+res.drop(['open', 'high', 'low', 'volume_fiat', 'volume_cry', 'trade_count', 'timestamp', 'symbol'], axis=1, inplace=True)
 
 end = datetime.datetime.now()
-print('\n'+(end-start).__str__())

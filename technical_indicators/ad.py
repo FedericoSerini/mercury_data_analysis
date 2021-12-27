@@ -14,8 +14,9 @@ class Ad:
     def calculate_ad(self):
         money_flow_multiplier = ((self.data.close - self.data.low) - (self.data.high - self.data.close)) / (
                 self.data.high - self.data.low)
-        ad = (money_flow_multiplier * self.data.volume).cumsum()
+        ad = (money_flow_multiplier * self.data.volume_cry).cumsum()
         self.plot_ad(ad)
+        ad = (ad / 50) - 1
         return ad
 
     def plot_ad(self, ad):

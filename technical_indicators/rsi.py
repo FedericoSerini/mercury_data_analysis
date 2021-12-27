@@ -22,6 +22,7 @@ class Rsi:
         rs = up / down
         rsi = 100.0 - (100.0 / (1.0 + rs))
         self.plot_rsi(rsi, 'SMA')
+        rsi = (rsi/50)-1
         return rsi
 
     def calculate_rsi_by_ewma(self):

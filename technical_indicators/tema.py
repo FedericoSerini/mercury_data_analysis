@@ -9,7 +9,7 @@ class Tema:
         self.look_back = look_back
         self.data = original_data.copy()
         self.should_plot = should_plot
-        self.calculated_ema = Ema(look_back, original_data, False).calculate_ema()
+        self.calculated_ema = Ema(look_back, self.data, False).calculate_ema()
 
     def __del__(self):
         self.data = []
@@ -30,6 +30,7 @@ class Tema:
                 + ema_ema_ema
         )
         self.plot_tema(tema)
+        tema = (self.data.close-tema)*10/self.data.close
         return tema
 
     def plot_tema(self, tema):

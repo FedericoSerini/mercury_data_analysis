@@ -17,6 +17,7 @@ class Stoch:
         highest_high = self.data.high.rolling(self.look_back).max()
         lowest_low = self.data.low.rolling(self.look_back).min()
         stoch = (self.data.close - lowest_low) / (highest_high-lowest_low) * 100
+        stoch = (stoch / 50) - 1
         return stoch
 
     def plot_stoch(self, stoch):
