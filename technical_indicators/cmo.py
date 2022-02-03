@@ -6,7 +6,7 @@ class Cmo:
         self.data = original_data.copy()
         self.should_plot = should_plot
 
-    def calculate_cmo(self, look_back):
+    def calculate_cmo(self, look_back: int = 9):
         delta = self.data.close.diff()
 
         # positive gains (up) and negative gains (down) Series

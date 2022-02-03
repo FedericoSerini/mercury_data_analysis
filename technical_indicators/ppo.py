@@ -8,7 +8,7 @@ class Ppo:
         self.data = original_data.copy()
         self.should_plot = should_plot
 
-    def calculate_ppo(self, look_back_fast, look_back_slow):
+    def calculate_ppo(self, look_back_fast: int = 12, look_back_slow: int = 26):
         data = self.data
         EMA_fast = pd.Series(
             data.close.ewm(ignore_na=False, span=look_back_fast, adjust=True).mean(),

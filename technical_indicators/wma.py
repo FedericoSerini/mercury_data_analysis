@@ -9,7 +9,7 @@ class Wma:
         self.data = original_data.copy()
         self.should_plot = should_plot
 
-    def calculate_wma(self, look_back):
+    def calculate_wma(self, look_back: int = 9):
         period = look_back
         d = (period * (period + 1)) / 2  # denominator
         weights = np.arange(1, period + 1)

@@ -8,7 +8,7 @@ class Hma:
         self.data = original_data.copy()
         self.should_plot = should_plot
 
-    def calculate_hma(self, look_back):
+    def calculate_hma(self, look_back: int = 16):
         period = look_back
         half_length = int(period / 2)
         sqrt_length = int(math.sqrt(period))

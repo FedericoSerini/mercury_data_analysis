@@ -5,7 +5,7 @@ class Cci:
         self.data = original_data.copy()
         self.should_plot = should_plot
 
-    def calculate_cci(self, look_back):
+    def calculate_cci(self, look_back: int = 20):
         tp = (self.data.high + self.data.low + self.data.close) / 3
         tp_rolling = tp.rolling(window=look_back, min_periods=0)
         mad = tp_rolling.apply(lambda s: abs(s - s.mean()).mean(), raw=True)

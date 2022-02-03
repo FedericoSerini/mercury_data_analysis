@@ -5,7 +5,7 @@ class Roc:
         self.data = original_data.copy()
         self.should_plot = should_plot
 
-    def calculate_roc(self,look_back):
+    def calculate_roc(self,look_back: int = 12):
         period = look_back
         roc = (self.data.close.diff(period) / self.data.close.shift(period)) * 100
         roc = roc.fillna(method='bfill')

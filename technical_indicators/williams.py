@@ -5,7 +5,7 @@ class Williams:
         self.data = original_data.copy()
         self.should_plot = should_plot
 
-    def calculate_williams(self, look_back):
+    def calculate_williams(self, look_back: int = 14):
         highest_high = self.data.high.rolling(center=False, window=look_back).max()
         lowest_low = self.data.low.rolling(center=False, window=look_back).min()
         wr = (highest_high - self.data.close) / (highest_high - lowest_low)

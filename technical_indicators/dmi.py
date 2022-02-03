@@ -27,7 +27,7 @@ class Dmi:
             100 * (negative_directional_movement.ewm(alpha=1 / look_back).mean() / calculated_atr))
         return negative_directional_index
 
-    def calculate_dmi(self, look_back):
+    def calculate_dmi(self, look_back: int = 14):
         pdi = self.get_positive_directional_index(look_back)
         ndi = self.get_negative_directional_index(look_back)
         dmi = (abs(pdi - ndi) / abs(pdi + ndi)) * 100

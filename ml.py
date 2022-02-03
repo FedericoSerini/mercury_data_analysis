@@ -62,6 +62,7 @@ def train_cnn(training_df, test_datafr, parameters):
     print("Test conf matrix: ",  confusion_matrix(np.array(reverse_one_hot(test_label)),
                                                   np.array(reverse_one_hot(prediction))))
 
+    model.save("my_model.h5")
     return prediction, test_label, test_price
 
 
@@ -74,7 +75,7 @@ def reverse_one_hot(prediction):
 
 df = pd.read_csv("./data/res.csv", header=None, index_col=None, delimiter=',')
 
-train_df, test_df = train_test_split(df, test_size=0.40)
+train_df, test_df = train_test_split(df, test_size=0.20)
 
 
 
@@ -140,7 +141,7 @@ test_df.reset_index(drop=True, inplace=True)
 print("train_df size: ", train_df.shape)
 
 # fill params dict before call train_cnn
-params = {"input_w": 15, "input_h": 15, "num_classes": 3, "batch_size": 1, "epochs": 500}
+params = {"input_w": 15, "input_h": 15, "num_classes": 3, "batch_size": 1, "epochs": 5}
 
 predictions, test_labels, test_prices = train_cnn(train_df, test_df, params)
 

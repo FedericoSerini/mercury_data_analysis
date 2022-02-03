@@ -18,7 +18,7 @@ class Ema:
         self.plot_ema(exponential_moving_average)
         return exponential_moving_average
 
-    def calculate_ema_normalized(self, look_back):
+    def calculate_ema_normalized(self, look_back: int = 9):
         exponential_moving_average = self.calculate_ema(look_back)
         exponential_moving_average = (self.data.close-exponential_moving_average.shift(1))*10/self.data.close
         return exponential_moving_average

@@ -11,7 +11,7 @@ class Rsi:
     def __del__(self):
         self.data = []
 
-    def calculate_rsi_by_sma(self,look_back):
+    def calculate_rsi_by_sma(self,look_back: int = 14):
         sma = Sma()
         close = self.data.close
         delta = close.diff()

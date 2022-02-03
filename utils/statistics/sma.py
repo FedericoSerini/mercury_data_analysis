@@ -6,7 +6,7 @@ class Sma:
     def __init__(self):
         self.p = ""
 
-    def calculate_sma_normalized(self, data, look_back):
+    def calculate_sma_normalized(self, data, look_back: int = 41):
         sma = data.rolling(look_back).mean()
         sma = sma.fillna(method='bfill')
         sma = (data - sma.shift(1)) * (10 / data)

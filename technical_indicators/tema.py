@@ -12,7 +12,7 @@ class Tema:
     def __del__(self):
         self.data = []
 
-    def calculate_tema(self, look_back):
+    def calculate_tema(self, look_back: int = 9):
         calculated_ema = Ema(self.data, False).calculate_ema(look_back)
         triple_ema = 3 * calculated_ema
         ema_ema_ema = (

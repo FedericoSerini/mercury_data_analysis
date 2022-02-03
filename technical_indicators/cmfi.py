@@ -1,6 +1,5 @@
 class Cmfi:
 
-    
     def __init__(self, original_data, should_plot):
         self.data = original_data.copy()
         self.should_plot = should_plot
