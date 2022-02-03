@@ -21,6 +21,7 @@ class Adx:
         adx_smooth = adx.ewm(alpha=1 / self.look_back).mean()
         self.plot_adx(self.dmi.get_positive_directional_index(), self.dmi.get_negative_directional_index(), adx_smooth)
         adx_smooth = (adx_smooth / 50) - 1
+        adx_smooth = adx_smooth.fillna(method='bfill')
         return adx_smooth
 
     def plot_adx(self, pdi, ndi, adx_smooth):

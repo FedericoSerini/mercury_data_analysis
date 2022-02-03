@@ -9,7 +9,6 @@ class Atr:
     def __init__(self, look_back, original_data):
         self.look_back = look_back
         self.data = original_data.copy()
-        self.sma = Sma(look_back)
 
     def __del__(self):
         self.data = []
@@ -25,5 +24,6 @@ class Atr:
     def calculate_atr(self):
         """ Calculates the Average True Range """
         true_range = self.calculate_tr()
-        average_true_range = self.sma.calculate_sma(true_range)
+        average_true_range = Sma().calculate_sma(true_range, self.look_back)
+        average_true_range = average_true_range.fillna(method='bfill')
         return average_true_range

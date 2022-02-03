@@ -17,6 +17,7 @@ class Ad:
         ad = (money_flow_multiplier * self.data.volume_cry).cumsum()
         self.plot_ad(ad)
         ad = (ad / 50) - 1
+        ad = ad.fillna(method='bfill')
         return ad
 
     def plot_ad(self, ad):

@@ -2,12 +2,11 @@
 
 
 class Cmo:
-    def __init__(self, look_back, original_data, should_plot):
-        self.look_back = look_back
+    def __init__(self, original_data, should_plot):
         self.data = original_data.copy()
         self.should_plot = should_plot
 
-    def calculate_cmo(self):
+    def calculate_cmo(self, look_back):
         delta = self.data.close.diff()
 
         # positive gains (up) and negative gains (down) Series
@@ -16,11 +15,13 @@ class Cmo:
         down[down > 0] = 0
 
         # EMAs of ups and downs
-        _gain = up.ewm(com=self.look_back, adjust=True).mean()
-        _loss = down.ewm(com=self.look_back, adjust=True).mean().abs()
+        _gain = up.ewm(com=look_back, adjust=True).mean()
+        _loss = down.ewm(com=look_back, adjust=True).mean().abs()
 
         cmo = 100 * ((_gain - _loss) / (_gain + _loss))
+        cmo = cmo.fillna(method='bfill')
         self.plot_cmo(cmo)
+        cmo = (cmo.shift(1)/100)
         return cmo
 
     def plot_cmo(self, cmo):

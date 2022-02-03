@@ -1,21 +1,33 @@
+import pandas as pd 
+
 # Percentage Price Oscillator
 
 class Ppo:
-    def __init__(self, look_back, original_data, should_plot):
-        self.look_back = look_back
+
+    def __init__(self, original_data, should_plot):
         self.data = original_data.copy()
         self.should_plot = should_plot
 
-    def calculate_ppo(self):
-        period = self.look_back
-        roc = (self.data.close.diff(period) / self.data.close.shift(period)) * 100
-        self.plot_ppo(roc)
-        return roc
+    def calculate_ppo(self, look_back_fast, look_back_slow):
+        data = self.data
+        EMA_fast = pd.Series(
+            data.close.ewm(ignore_na=False, span=look_back_fast, adjust=True).mean(),
+            name="EMA_fast",
+        )
+        EMA_slow = pd.Series(
+            data.close.ewm(ignore_na=False, span=look_back_slow, adjust=True).mean(),
+            name="EMA_slow",
+        )
+        ppo = pd.Series(((EMA_fast - EMA_slow) / EMA_slow) * 100)
+        ppo = ppo.fillna(method='bfill')
+        self.plot_ppo(ppo)
+        ppo = ppo.shift(1)/10
+        return ppo
 
-    def plot_ppo(self, roc):
+    def plot_ppo(self, ppo):
         if self.should_plot:
             import matplotlib.pyplot as plt
             legend_label = 'PPO'
-            roc.plot()
+            ppo.plot()
             plt.legend([legend_label])
             plt.show()

@@ -1,26 +1,32 @@
+import pandas as pd
+
 # MACD
 
 class Macd:
-    def __init__(self, look_back, original_data, should_plot):
-        self.look_back = look_back
+    def __init__(self, original_data, should_plot):
         self.data = original_data.copy()
         self.should_plot = should_plot
 
-    def calculate_macd(self):
-        '''EMA_fast = pd.Series(
-            ohlc[column].ewm(ignore_na=False, span=period_fast, adjust=adjust).mean(),
+    def calculate_macd(self, look_back_fast, look_back_slow):
+        data = self.data 
+        EMA_fast = pd.Series(
+            data.close.ewm(ignore_na=False, span=look_back_fast, adjust=True).mean(),
             name="EMA_fast",
         )
         EMA_slow = pd.Series(
-            ohlc[column].ewm(ignore_na=False, span=period_slow, adjust=adjust).mean(),
+            data.close.ewm(ignore_na=False, span=look_back_slow, adjust=True).mean(),
             name="EMA_slow",
         )
-        MACD = pd.Series(EMA_fast - EMA_slow, name="MACD")
-        MACD_signal = pd.Series(
-            MACD.ewm(ignore_na=False, span=signal, adjust=adjust).mean(), name="SIGNAL"
-        )
+        macd = pd.Series(EMA_fast - EMA_slow)
+        macd = macd.fillna(method='bfill')
 
-        return pd.concat([MACD, MACD_signal], axis=1)'''
+        max_macd = macd.max()
+        min_macd = macd.min()
+
+        normalized_macd = (2*(macd.shift(1) - min_macd) / (max_macd - min_macd))-1
+        self.plot_macd(macd)
+
+        return normalized_macd
 
     def plot_macd(self, macd):
         if self.should_plot:

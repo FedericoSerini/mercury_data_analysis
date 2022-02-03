@@ -16,7 +16,7 @@ class Dema:
 
     def calculate_dema(self):
         dema = 2 * self.calculated_ema - self.calculated_ema.ewm(span=self.look_back, adjust=True).mean()
-
+        dema = dema.fillna(method='bfill')
         self.plot_dema(dema)
         return dema
 

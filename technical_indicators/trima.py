@@ -16,6 +16,7 @@ class Trima:
     def calculate_trima(self):
         sma = self.sma.calculate_sma(self.data.close)
         trima = sma.rolling(window=self.look_back).sum()/self.look_back
+        trima = trima.fillna(method='bfill')
         self.plot_trima(trima)
         return trima
 

@@ -1,9 +1,9 @@
 import math
 import pandas as pd
 
-store = pd.read_csv('../data/cnn_result.csv', delimiter=';', header=None)
+store = pd.read_csv('../data/cnn_result.csv', delimiter=';')
 store.rename(columns={0: 'prediction', 1: 'test_label', 2: 'test_price'}, inplace=True)
-print(store.head())
+
 money = 10000.0
 money_BAH = 10000.0
 maximum_money = 0
@@ -28,19 +28,19 @@ while counter < len(store):
     elem = store.iloc[counter]
 
     if elem.prediction == 1:
-        buy_point = elem.test_price
+        buy_point = float(elem.test_price)
         buy_point = buy_point * 100
         share_number = (money - 1.0) / buy_point
         force_sell = False
 
         for j in range(counter, len(store) - 1, 1):
             elem2 = store.iloc[j]
-            sell_point = elem2.test_price
+            sell_point = float(elem2.test_price)
             sell_point = sell_point * 100
             money_temp = (share_number * sell_point) - 1.0
 
             if elem2.prediction == 2 | force_sell:
-                sell_point = elem2.test_price
+                sell_point = float(elem2.test_price)
                 sell_point = sell_point * 100
                 gain = sell_point - buy_point
                 if gain > 0:

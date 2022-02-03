@@ -5,8 +5,7 @@ import numpy as np
 
 class Wma:
 
-    def __init__(self, look_back, original_data, should_plot):
-        self.look_back = look_back
+    def __init__(self, original_data, should_plot):
         self.data = original_data.copy()
         self.should_plot = should_plot
 
@@ -23,7 +22,9 @@ class Wma:
 
         _close = self.data.close.rolling(period, min_periods=period)
         wma = _close.apply(linear(weights), raw=True)
+        wma = wma.fillna(method='bfill')
         self.plot_wma(wma)
+        wma = (self.data.close-wma.shift(1))*(10/self.data.close)
         return wma
 
     def plot_wma(self, wma):

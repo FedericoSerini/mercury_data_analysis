@@ -1,8 +1,5 @@
 from utils import dataset_utils
 from logger.logger import Logger
-import pandas as pd
-from technical_indicators.adx import Adx
-
 from technical_indicators.cci import Cci
 from technical_indicators.cmo import Cmo
 from technical_indicators.dmi import Dmi
@@ -10,15 +7,11 @@ from technical_indicators.ema import Ema
 from technical_indicators.hma import Hma
 from technical_indicators.roc import Roc
 from technical_indicators.rsi import Rsi
-from technical_indicators.bbands import BBands
-from technical_indicators.trima import Trima
-from technical_indicators.vwap import Vwap
-from technical_indicators.obv import Obv
-
-from technical_indicators.ad import Ad
-from technical_indicators.stoch import Stoch
+from technical_indicators.macd import Macd
+from technical_indicators.ppo import Ppo
+from technical_indicators.psar import Psar
+from technical_indicators.cmfi import Cmfi
 from utils.statistics.sma import Sma
-from technical_indicators.dema import Dema
 from technical_indicators.tema import Tema
 from technical_indicators.williams import Williams
 from technical_indicators.wma import Wma
@@ -28,89 +21,87 @@ class TechnicalIndicatorsCalculator:
     
     def __init__(self):
         self.log = Logger(TechnicalIndicatorsCalculator.__name__).get_log()
-        self.look_back = 11
         dataset = dataset_utils.Dataset(dataset_filename='data/BTCUSDT_d.csv')
         self.trades = dataset.get_full_trades("BTCUSDT")
-
-        self.cci = Cci(look_back=self.look_back, original_data=self.trades, should_plot=False)
-        self.cmo = Cmo(look_back=self.look_back, original_data=self.trades, should_plot=False)
-        self.dmi = Dmi(look_back=self.look_back, original_data=self.trades)
-        self.hma = Hma(look_back=self.look_back, original_data=self.trades, should_plot=False)
-        self.roc = Roc(look_back=self.look_back, original_data=self.trades, should_plot=False)
-        self.rsi = Rsi(look_back=self.look_back, original_data=self.trades, should_plot=False)
-        self.sma = Sma(look_back=self.look_back)
-        self.ema = Ema(look_back=self.look_back, original_data=self.trades, should_plot=False)
-        self.tema = Tema(look_back=self.look_back, original_data=self.trades, should_plot=False)
-        self.williams = Williams(look_back=self.look_back, original_data=self.trades, should_plot=False)
-        self.wma = Wma(look_back=self.look_back, original_data=self.trades, should_plot=False)
-        #MACDIndicator -  review
-        #PPOIndicator - review
-        #ChaikinMoneyFlowIndicator
-        #ParabolicSarIndicator - review
+        self.cci = Cci(original_data=self.trades, should_plot=False)
+        self.cmfi = Cmfi(original_data=self.trades, should_plot=False)
+        self.cmo = Cmo(original_data=self.trades, should_plot=False)
+        self.dmi = Dmi(original_data=self.trades)
+        self.hma = Hma(original_data=self.trades, should_plot=False)
+        self.macd = Macd(original_data=self.trades, should_plot=False)
+        self.ppo = Ppo(original_data=self.trades, should_plot=False)
+        self.psar = Psar(original_data=self.trades, should_plot=False)
+        self.roc = Roc(original_data=self.trades, should_plot=False)
+        self.rsi = Rsi(original_data=self.trades, should_plot=False)
+        self.sma = Sma()
+        self.ema = Ema(original_data=self.trades, should_plot=False)
+        self.tema = Tema(original_data=self.trades, should_plot=False)
+        self.williams = Williams(original_data=self.trades, should_plot=False)
+        self.wma = Wma(original_data=self.trades, should_plot=False)
         self.ml_data = self.trades.copy()
 
     def calculate(self):
         self.log.info("Start Technical Indicators Calculus")
 
-        self.log.info("CCI Calculus..")
-        self.ml_data['cci'] = self.cci.calculate_cci()
+        for i in range(5, 20):
+            look_back = i+1
+            self.ml_data['cci'+str(look_back)] = self.cci.calculate_cci(look_back)
 
-        self.log.info("CMO Calculus..")
-        self.ml_data['cmo'] = self.cmo.calculate_cmo()
+        for i in range(5, 20):
+            look_back = i + 1
+            self.ml_data['cmfi'+str(look_back)] = self.cmfi.calculate_cmfi(look_back)
 
-        self.log.info("DMI Calculus..")
-        self.ml_data['dmi'] = self.dmi.calculate_dmi()
+        for i in range(5, 20):
+            look_back = i + 1
+            self.ml_data['cmo'+str(look_back)] = self.cmo.calculate_cmo(look_back)
 
-        self.log.info("HMA Calculus..")
-        self.ml_data['hma'] = self.hma.calculate_hma()
+        for i in range(5, 20):
+            look_back = i + 1
+            self.ml_data['dmi'+str(look_back)] = self.dmi.calculate_dmi(look_back)
 
-        self.log.info("ROC Calculus..")
-        self.ml_data['roc'] = self.roc.calculate_roc()
+        for i in range(5, 20):
+            look_back = i + 1
+            self.ml_data['hma'+str(look_back)] = self.hma.calculate_hma(look_back)
 
-        self.log.info("RSI Calculus..")
-        self.ml_data['rsi'] = self.rsi.calculate_rsi_by_sma()
+        for i in range(5, 20):
+            look_back = i + 1
+            self.ml_data['macd'+str(look_back)] = self.macd.calculate_macd(look_back, look_back*2)
 
-        self.log.info("SMA Calculus..")
-        self.ml_data['sma'] = self.sma.calculate_sma(data=self.trades.close)
+        for i in range(5, 20):
+            look_back = i + 1
+            self.ml_data['ppo'+str(look_back)] = self.ppo.calculate_ppo(look_back, look_back*2)
 
-        self.log.info("TEMA Calculus..")
-        self.ml_data['tema'] = self.tema.calculate_tema()
+        for i in range(5, 20):
+            look_back = i + 1
+            self.ml_data['psar'+str(look_back)] = self.psar.calculate_psar(look_back)
 
-        self.log.info("Williams %R Calculus..")
-        self.ml_data['williams'] = self.williams.calculate_williams()
+        for i in range(5, 20):
+            look_back = i + 1
+            self.ml_data['roc'+str(look_back)] = self.roc.calculate_roc(look_back)
 
-        self.log.info("WMA Calculus..")
-        self.ml_data['wma'] = self.wma.calculate_wma(self.look_back)
+        for i in range(5, 20):
+            look_back = i + 1
+            self.ml_data['rsi'+str(look_back)] = self.rsi.calculate_rsi_by_sma(look_back)
+
+        for i in range(5, 20):
+            look_back = i + 1
+            self.ml_data['sma'+str(look_back)] = self.sma.calculate_sma_normalized(data=self.trades.close, look_back=look_back)
+
+        for i in range(5, 20):
+            look_back = i + 1
+            self.ml_data['tema'+str(look_back)] = self.tema.calculate_tema(look_back)
+
+        for i in range(5, 20):
+            look_back = i + 1
+            self.ml_data['williams'+str(look_back)] = self.williams.calculate_williams(look_back)
+
+        for i in range(5, 20):
+            look_back = i + 1
+            self.ml_data['wma'+str(look_back)] = self.wma.calculate_wma(look_back)
+
+        for i in range(5, 20):
+            look_back = i + 1
+            self.ml_data['ema' + str(look_back)] = self.ema.calculate_ema_normalized(look_back)
 
         self.log.info("End Technical Indicators Calculus")
         return self.ml_data
-
-    # self.adx = Adx(look_back=self.look_back, original_data=self.trades, should_plot=False)
-    # self.bbands = BBands(look_back=self.look_back, original_data=self.trades, olhc_data=self.trades, should_plot=False)
-    # self.dema = Dema(look_back=self.look_back, original_data=self.trades, should_plot=False)
-        #self.ad = Ad(original_data=self.trades, should_plot=False)
-        #self.stoch = Stoch(look_back=self.look_back, original_data=self.trades, should_plot=False)
-    # self.trima = Trima(look_back=self.look_back, original_data=self.trades, should_plot=False)
-    # self.vwap = Vwap(original_data=self.trades, should_plot=False)
-    # self.obv = Obv(original_data=self.trades, should_plot=False)
-
-
-
-    # self.log.info("AD Calculus..")
-    # self.ml_data['ad'] = self.ad.calculate_ad()
-
-    # self.log.info("STOCH Calculus..")
-    # self.ml_data['stoch'] = self.stoch.calculate_stoch()
-
-    # self.log.info("ADX Calculus..")
-    # self.ml_data['adx'] = self.adx.calculate_adx()
-
-    #self.log.info("BBANDS Calculus..")
-        #self.bbands.calculate_bbands()
-
-        #self.log.info("TRIMA Calculus..")
-        #self.ml_data['trima'] = self.trima.calculate_trima()
-        #self.ml_data['vwap'] = self.vwap.calculate_vwap() TODO fix
-
-        #self.log.info("OBV Calculus..")
-        #self.ml_data['obv'] = self.obv.calculate_obv()

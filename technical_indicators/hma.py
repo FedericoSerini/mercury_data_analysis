@@ -4,21 +4,22 @@ import numpy as np
 
 
 class Hma:
-    def __init__(self, look_back, original_data, should_plot):
-        self.look_back = look_back
+    def __init__(self, original_data, should_plot):
         self.data = original_data.copy()
         self.should_plot = should_plot
 
-    def calculate_hma(self):
-        period = self.look_back
+    def calculate_hma(self, look_back):
+        period = look_back
         half_length = int(period / 2)
         sqrt_length = int(math.sqrt(period))
 
-        wmaf = self.calculate_wma(self.data,half_length)
-        wmas = self.calculate_wma(self.data,period)
+        wmaf = self.calculate_wma(self.data, half_length)
+        wmas = self.calculate_wma(self.data, period)
         self.data["deltawma"] = 2 * wmaf - wmas
-        hma = self.calculate_wma( self.data, column="deltawma", look_back=sqrt_length)
+        hma = self.calculate_wma(self.data, column="deltawma", look_back=sqrt_length)
+        hma = hma.fillna(method='bfill')
         self.plot_hma(hma)
+        hma = (self.data.close-hma.shift(1))*(10/self.data.close)
         return hma
 
     def calculate_wma(self, data, look_back, column: str = "close"):

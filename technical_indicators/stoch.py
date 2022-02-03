@@ -8,7 +8,7 @@ class Stoch:
         self.look_back = look_back
         self.data = original_data.copy()
         self.should_plot = should_plot
-        self.sma = Sma(look_back)
+        self.sma = Sma()
 
     def __del__(self):
         self.data = []
@@ -18,6 +18,7 @@ class Stoch:
         lowest_low = self.data.low.rolling(self.look_back).min()
         stoch = (self.data.close - lowest_low) / (highest_high-lowest_low) * 100
         stoch = (stoch / 50) - 1
+        stoch = stoch.fillna(method='bfill')
         return stoch
 
     def plot_stoch(self, stoch):

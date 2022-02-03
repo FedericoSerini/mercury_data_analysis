@@ -14,6 +14,7 @@ class Obv:
     def calculate_obv(self):
         delta = np.sign(self.data.close.diff())
         obv = (delta*self.data.volume_cry).cumsum()
+        obv = obv.fillna(method='bfill')
         self.plot_obv(obv)
         return obv
 
