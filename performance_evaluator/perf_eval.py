@@ -4,10 +4,11 @@ import pandas as pd
 store = pd.read_csv('../data/cnn_result.csv', delimiter=';')
 store.rename(columns={0: 'prediction', 1: 'test_label', 2: 'test_price'}, inplace=True)
 
-money = 10000.0
-money_BAH = 10000.0
+start_money = 1000.0
+money = start_money
+money_BAH = start_money
 maximum_money = 0
-minimum_money = 10000
+minimum_money = 100
 maximum_profit_percent = 0.0
 maximum_lost_percent = 0.0
 maximum_gain = 0.0
@@ -126,8 +127,8 @@ number_of_days = len(store) - 1
 number_of_years = number_of_days / 365
 
 
-print("Our System Annualized return % => " + str(((math.exp(math.log(money/10000.0)/number_of_years)-1)*100))+"%")  # 5 years 0.2
-print("BaH Annualized return % => " + str(((math.exp(math.log(money_BAH/10000.0)/number_of_years)-1)*100))+"%")
+print("Our System Annualized return % => " + str(((math.exp(math.log(money/start_money)/number_of_years)-1)*100))+"%")  # 5 years 0.2
+print("BaH Annualized return % => " + str(((math.exp(math.log(money_BAH/start_money)/number_of_years)-1)*100))+"%")
 print("Annualized number of transaction => " + str(transaction_count) + "#")
 print("Percent success of transaction => " + str((success_transaction_count / transaction_count) * 100) + "%")
 print("Average percent profit per transaction => " + str((total_percent_profit / transaction_count) * 100) + "%")
