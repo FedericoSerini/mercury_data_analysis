@@ -1,7 +1,7 @@
 import math
 import pandas as pd
 
-store = pd.read_csv('../data/cnn_result.csv', delimiter=';')
+store = pd.read_csv('../mercury/cnn_result.csv', delimiter=';')
 store.rename(columns={0: 'prediction', 1: 'test_label', 2: 'test_price'}, inplace=True)
 
 start_money = 1000.0

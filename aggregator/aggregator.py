@@ -7,7 +7,7 @@ import pandas as pd
 
 symbol = "BTCEUR"
 
-dataset = dataset_utils.Dataset(dataset_filename='../data/2021-9-21.csv')
+dataset = dataset_utils.Dataset(dataset_filename='../mercury/2021-9-21.csv')
 trades = dataset.get_full_trades(symbol)
 #resampled = trades.groupby(pd.Grouper(freq='0.25Min'))
 #olhcv_data = dataset.get_ohlcv(resampled)
